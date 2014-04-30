@@ -39,33 +39,25 @@ java -cp "execLib/*" org.appdynamics.licensecount.CountLicenses -c <FQDN-For-Con
 
  -a,--account <a>      If controller is multi-tenant add the account
 
- -c,--controller <c>   This is going to be the FQDN of the controller, for
-                       example: appdyn.saas.appdynamics.com
+ -c,--controller <c>   This is going to be the FQDN of the controller, for example: appdyn.saas.appdynamics.com
 
  -d,--debug <d>        Debug level to set the calls at.
 
- -f,--file <f>         Optional : This is going to be the file name that
-
-                       is going to be created. Default is
-
-                       <AccountName>_LicenseCount.xlsx.
+ -f,--file <f>         Optional : This is going to be the file name that is going to be created. Default is <AccountName>_LicenseCount.xlsx.
 
 
  -g,--granular         How granular you want the text.
 
- -i,--interval <i>     Optional : This is going to be the number of days
+ -i,--interval <i>     Optional : This is going to be the number of days we go back and run. Default is going back 7 days from midnight to midnight.
 
-                       we go back and run. Default is going back 7 days
-                       from midnight to midnight.
-
- -P,--port <P>         The is going to be the port that is used by the
-                       controller.
+ -P,--port <P>         The is going to be the port that is used by the controller.
 
  -p,--passwd <p>       The password to use for the connection
+
  -s,--ssl              Use SSL with connection
- -U,--uptime <U>       Optional : The amount of uptime necessary for an
-                       agent to be up so that it is counted. Default value
-                       is .70 (70%)
+
+ -U,--uptime <U>       Optional : The amount of uptime necessary for an agent to be up so that it is counted. Default value is .70 (70%) 
+
  -u,--username <u>     The user name to use for the connection
 
 Example:
