@@ -1,0 +1,82 @@
+The purpose is to get the nodes 
+
+
+What defines license usage ? 
+
+So after 48 hours we have a weekly 
+
+Pick today:then go back 7 days.
+
+How can this work? 
+
+First we need to take a timestamp or an interval of time and then based on daily
+usage we determine the percentage that is considered a license: 60% being default
+
+This means that for each application we get the nodes:
+Then for each node grab the appropriate agent app or machine
+We then query the availability metrics for each
+
+Then for each day we calculate availability use the %
+
+Day 1:
+   App count
+   Tier count
+Day 2:
+
+This will mean that the interval will be based on days going back.
+
+For each day we will take the metrics for the node and calculate the availability.
+
+That means that for each node we need to determine what type of metric we are going to get.
+
+The default method is to ask for an interval : this will be the number of days from this point forward.
+
+Otherwise we can take a start and end.
+
+Options Needed:
+
+-- controller : http://yyy.yy.com|https://yyy.yy.com | required
+-- port -- optional
+-- detailLevel --optional
+-- debugLevel -- optional
+-- application -- optional
+-- user | required
+-- customer --optional
+-- passwd |required
+
+
+So one of the first things we do is to get the nodes, once we have the nodes we parse them into their particular tiers
+-- There may be a problem is a node moves from one tier to another because we don't get the node from that perspective. 
+
+Once we get the nodes we need to execute the count function for each level. Once we have that we need to execute a secondary
+count of the php and .net from the application level.
+
+
+ create a hash of <string>->[Node] :: dotNetMap
+ create a hash of <string>->[Node] :: phpMap
+For each app go through the tiers
+   For the nodes in the tiers
+          if(node of type dotNet || node of type php){
+                if(dotNet){
+                    if(!dotNetNetMap.contains(node.machineName){dotNetMap.put(node.machineName,new ArrayList<node>();}
+                    dotNetMap.get(machineName).add(node)    
+                }
+                if(php){
+                    if(!phpMap.contains(node.machineName){phpMap.put(node.machineName,new ArrayList<node>();}
+                    phpMap.get(machineName).add(node)
+                }
+          }
+   for each name in dotNetMap
+        int size = dotNetMap.get(name).getSize();
+        double count = (1/size).percision(2);
+        for each node in dotNetMap.get(name)
+                for tier in tierMap.get(node.tierName)
+                    tier.iis+=count;
+                
+   for each name in phpMap
+        int size = php.get(name).getSize();
+        double count = (1/size).percision(2);
+        for each node in php.get(name)
+                for tier in tierMap.get(node.tierName)
+                    tier.php+=count;
+          
