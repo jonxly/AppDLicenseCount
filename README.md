@@ -45,7 +45,6 @@ java -cp "execLib/*" org.appdynamics.licensecount.CountLicenses -c <FQDN-For-Con
 
  -f,--file <f>      :   Optional : This is going to be the file name that is going to be created. Default is <AccountName>_LicenseCount.xlsx.
 
-
  -g,--granular      :   How granular you want the text.
 
  -i,--interval <i>  :   Optional : This is going to be the number of days we go back and run. Default is going back 7 days from midnight to midnight.
@@ -59,6 +58,7 @@ java -cp "execLib/*" org.appdynamics.licensecount.CountLicenses -c <FQDN-For-Con
  -U,--uptime <U>    :   Optional : The amount of uptime necessary for an agent to be up so that it is counted. Default value is .70 (70%) 
 
  -u,--username <u>  :   The user name to use for the connection
+
 
 Example:
 java -Xmx512m -cp "execLib/*" org.appdynamics.licensecount.CountLicenses -cACME-CONTROLLER.saas.appdynamics.com -P443 -uACMEUSERNAME -pACMEPASSWORD -aACME -s 
