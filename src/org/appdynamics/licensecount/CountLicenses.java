@@ -77,7 +77,7 @@ public class CountLicenses {
         logger.log(Level.INFO,"Getting applications.");
         for(Application appD: apps.getApplications()){
             if(QAMODE){
-                if(appD.getName().equalsIgnoreCase("MPSUnified-Prod")){ //appD.getName().contains("PHP") || 
+                if(appD.getName().equalsIgnoreCase("Tier-Prod")){ //appD.getName().contains("PHP") || 
                     //Here we are creating the application into their own applications
                     ApplicationLicenseCount appCount = new ApplicationLicenseCount(appD.getName(),appD.getId());
                     //This is where we load the nodes into the application, no count is done yet
