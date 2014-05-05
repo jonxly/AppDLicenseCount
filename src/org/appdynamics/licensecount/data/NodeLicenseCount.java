@@ -135,6 +135,7 @@ public class NodeLicenseCount extends LicenseCount{
                     boolean fnd=false;
                     if(checkIfPHP(tierAgentType)){ type=2;fnd=true;}
                     if(checkIfNodeJs(tierAgentType)){ type=3;fnd=true;}
+                    if(checkIfDotNet(tierAgentType)){type=1;fnd=true;}
                     if(!fnd)type=2;
                 }else{
                     type = 0;
@@ -204,6 +205,12 @@ Enter host password for user 'gsadmin@customer1':
     
     public boolean checkIfNodeJs(String tierAgentType){
         if(tierAgentType.matches("(?i)node")) return true;
+        return false;
+    }
+    
+    public boolean checkIfDotNet(String tierAgentType){
+        if(tierAgentType.contains("DOT_NET")) return true;
+        
         return false;
     }
     
