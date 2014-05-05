@@ -165,8 +165,8 @@ public class TierLicenseCount extends LicenseCount{
             tRange.setName(tRange.createName());
             for(NodeLicenseCount node:nodeLicenseCount){
                 if(node.getRangeValues().get(i).isCountAsLicense()){
-                    if(s.debugLevel >= 2) 
-            logger.log(Level.INFO,new StringBuilder().append("\t\tCounting node type ").append(node.getType()).toString());
+//                    if(s.debugLevel >= 2) 
+//            logger.log(Level.INFO,new StringBuilder().append("\t\tCounting node type ").append(node.getType()).toString());
                     switch(node.getType()){
                         case 1:
                             //We don't do anything for now, this is will be added up later.
