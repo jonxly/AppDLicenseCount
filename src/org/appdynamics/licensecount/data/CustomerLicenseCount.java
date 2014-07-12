@@ -55,12 +55,6 @@ public class CustomerLicenseCount extends LicenseCount{
         timeRanges=getTimeRanges(interval);
         totalRange=getTimeRange(interval);
         
-        if(s.debugLevel >= 2){
-            StringBuilder msg1 = new StringBuilder();
-            msg1.append("\nThe range is ").append(totalRange.toString());
-            for(org.appdynamics.appdrestapi.util.TimeRange tr: timeRanges) msg1.append("\nThe ranges is ").append(tr.toString());
-            logger.log(Level.INFO,msg1.toString());
-        }
         
         totalRangeValue = new CustomerLicenseRange("Custumer Total");
         totalRangeValue.setStart(totalRange.getStart());
