@@ -43,7 +43,10 @@ public class CustomerLicenseCount extends LicenseCount{
         //if(s.debugLevel > 0) System.out.println("\tAdding " + app.getApplicationName() + " id " +app.getApplicationId()+" size " + applications.size());
     }
     
-    
+    /*
+     *  This function will start the population of the nodes and tiers across the app.
+     * 
+     */
     public void populateApplications(RESTAccess access,int interval){
         
         if(s.debugLevel >= 2) 
@@ -52,8 +55,16 @@ public class CustomerLicenseCount extends LicenseCount{
         timeRanges=getTimeRanges(interval);
         totalRange=getTimeRange(interval);
         
+        if(s.debugLevel >= 2){
+            StringBuilder msg1 = new StringBuilder();
+            msg1.append("\nThe range is ").append(totalRange.toString());
+            for(org.appdynamics.appdrestapi.util.TimeRange tr: timeRanges) msg1.append("\nThe ranges is ").append(tr.toString());
+            logger.log(Level.INFO,msg1.toString());
+        }
+        
         totalRangeValue = new CustomerLicenseRange("Custumer Total");
-        totalRangeValue.setStart(totalRange.getStart());totalRangeValue.setEnd(totalRange.getEnd());
+        totalRangeValue.setStart(totalRange.getStart());
+        totalRangeValue.setEnd(totalRange.getEnd());
         
         for(ApplicationLicenseCount app: applications.values()){
             logger.log(Level.INFO,new StringBuilder().append("\tPopulating application ").append(app.getApplicationName()).toString());
@@ -64,23 +75,7 @@ public class CustomerLicenseCount extends LicenseCount{
         */
     }
     
-    public void populateApplications(RESTAccess access,long start, long end){
-        
-        if(s.debugLevel >= 2) 
-            logger.log(Level.INFO,new StringBuilder().append("Creating time range for range ").append(start).append(" and ").append(end).toString());
-        
-        timeRanges=getTimeRanges(start,end);
-        totalRange=getTimeRange(start,end);
-        
-        totalRangeValue = new CustomerLicenseRange("Custumer Total");
-        totalRangeValue.setStart(totalRange.getStart());totalRangeValue.setEnd(totalRange.getEnd());
-        
-        // This is going to get the nodes for these.
-        for(ApplicationLicenseCount app: applications.values()){
-            app.populateLicense(access.getNodesForApplication(app.getApplicationId()), access, timeRanges, totalRange);
-        }
-        
-    }
+
     
     public void countTierLicenses(){
         if(s.debugLevel >= 2) 

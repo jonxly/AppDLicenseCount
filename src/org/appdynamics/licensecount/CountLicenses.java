@@ -48,12 +48,26 @@ public class CountLicenses {
         bud.append("\n\tDebug Level: ").append(LicenseS.DEBUG_V).append("\n");
         //
         
+        
+        // Check if we need to be in debug
         if(!licOptions.validDebug(LicenseS.DEBUG_V)){licOptions.printHelp();System.exit(1);}
         else{s.debugLevel=LicenseS.DEBUG_V;}
-        if(!licOptions.validInterval(LicenseS.INTERVAL_V)){licOptions.printHelp();System.exit(1);}
+        
+        // Check for valid interval
+        if(!licOptions.validInterval(LicenseS.INTERVAL_V)){
+            logger.log(Level.SEVERE,new StringBuilder().append("Interval provided is ").append(LicenseS.INTERVAL_V).append(" valid intervals are between 1-35\n").toString());
+            licOptions.printHelp();
+            System.exit(1);
+        }
+        
+        // Check if we can continue executing or we must exit
         if(!continueExec){licOptions.printHelp();System.exit(1);}
+        
+        // Check if the user provide an incorrect uptime.
         if(LicenseS.UPTIME_V == -1.0){licOptions.printHelp();System.exit(1); }
         else{ s.percentageThreshold=LicenseS.UPTIME_V;}
+        
+        
         if(s.debugLevel > 0) logger.log(Level.INFO,bud.toString());
         
         
@@ -75,10 +89,11 @@ public class CountLicenses {
         CustomerLicenseCount customer = new CustomerLicenseCount(LicenseS.ACCOUNT_V);
         
         logger.log(Level.INFO,"Getting applications.");
+        
+
         for(Application appD: apps.getApplications()){
-            if(QAMODE){
-                if(appD.getName().equalsIgnoreCase("Tier-Prod")){ //appD.getName().contains("PHP") || 
-                    //Here we are creating the application into their own applications
+            if(!LicenseS.APPS_V.isEmpty()){
+                if(LicenseS.APPS_V.contains(appD.getName())){
                     ApplicationLicenseCount appCount = new ApplicationLicenseCount(appD.getName(),appD.getId());
                     //This is where we load the nodes into the application, no count is done yet
                     //appCount.populateLicense(access.getNodesForApplication(appD.getId()));
@@ -91,10 +106,13 @@ public class CountLicenses {
                //appCount.populateLicense(access.getNodesForApplication(appD.getId()));
                customer.addApplication(appCount);               
             }
-
         }
         
-         
+        //If we don't find anything, then exit
+        if(customer.getApplications().size() == 0){
+            logger.log(Level.WARNING,new StringBuilder().append("No applications were found, exiting").toString());
+            System.exit(0);
+        } 
         /* 
          * Now that we have the list of ApplicationLicenseCount we can populate them in the populate method is where we 
          * can redefine the type of object.

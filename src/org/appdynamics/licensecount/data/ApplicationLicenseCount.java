@@ -58,9 +58,12 @@ public class ApplicationLicenseCount extends LicenseCount{
         totalRangeValue.setStart(totalTimeRange.getStart());
         totalRangeValue.setEnd(totalTimeRange.getEnd());
         
+        //If just in case we don't have any nodes
+        if(nodes == null) return;
+        
         
         /*
-         *  First we are going to get all of the nodes then pair them with the tier where the belong.
+         *  First we are going to get all of the nodes, then match them with their tier.
          */
         for(Node node:nodes.getNodes()){
             if(!tierLicenses.containsKey(node.getTierId()))
@@ -95,62 +98,7 @@ public class ApplicationLicenseCount extends LicenseCount{
     public void countTierLicenses(ArrayList<TimeRange> timeRanges){
         if(s.debugLevel >= 2) 
             logger.log(Level.INFO,new StringBuilder().append("Begin application level tier license count.").toString());
-        
-        HashMap<String,ArrayList<Node>> dotNetMap=new HashMap<String,ArrayList<Node>>();
-        HashMap<String,ArrayList<Node>> phpMap=new HashMap<String,ArrayList<Node>>();
-        
-        //logger.log(Level.INFO,"Starting to get the types of agents for DotNet and PHP");
-        for(TierLicenseCount tCount: tierLicenses.values()){
-            for(NodeLicenseCount nCount: tCount.getNodeLicenseCount()){
-                if(nCount.getType() == 1 || nCount.getType() == 2){
-                    if(nCount.getType() == 1){
-                        if(!dotNetMap.containsKey(nCount.getNode().getMachineName())) dotNetMap.put(nCount.getNode().getMachineName(), new ArrayList<Node>());
-                        //logger.log(Level.INFO, new StringBuilder().append("Add DotNet Node ").append(nCount.getNode().getName()).append(" - ").append(nCount.getNode().getMachineName()).toString());
-                        dotNetMap.get(nCount.getNode().getMachineName()).add(nCount.getNode());
-                    }
-                    /*
-                    if(nCount.getType() == 2){
-                        if(!phpMap.containsKey(nCount.getNode().getMachineName())) phpMap.put(nCount.getNode().getMachineName(), new ArrayList<Node>());
-                        //logger.log(Level.INFO, new StringBuilder().append("Add PHP Node ").append(nCount.getNode().getName()).append(" - ").append(nCount.getNode().getMachineName()).toString());
-                        phpMap.get(nCount.getNode().getMachineName()).add(nCount.getNode());
-                    }
-                    */
-                    
-                }
-            }
-        }
-        
-        //logger.log(Level.INFO,"Start to get the license weights for the nodes");
-        // This is now going to get the counts for the .Net and php agents.
-        for(String key: dotNetMap.keySet()){
-            double size = dotNetMap.get(key).size();
-            double piePiece=1/size;
-            StringBuilder bud=new StringBuilder().append("DotNet license for ").append(key).append(" is used by ").append(size).append(" nodes, and has a weight of ").append(piePiece).append(" per node\n");
-            for(Node node: dotNetMap.get(key)){
-                //For every node in the array, we are going to add this to the count.
-                TierLicenseCount tCount = tierLicenses.get(node.getTierId());
-                tCount.updateLicenseWeight(piePiece, node);
-                tCount.iis+=piePiece;
-                bud.append("\tDotNet license usage for tier ").append(tCount.getName()).append(" is ").append(tCount.iis).append("\n");
-            }
-            logger.log(Level.INFO,bud.toString());
-        }
-        
-        /*
-        for(String key: phpMap.keySet()){
-            double size = phpMap.get(key).size();
-            double piePiece=1/size;
-            StringBuilder bud = new StringBuilder().append("\nPHP license for ").append(key).append(" is used by ").append(size).append(" - ").append(piePiece).append("\n");
-            for(Node node: phpMap.get(key)){
-                //For every node in the array, we are going to add this to the count.
-                TierLicenseCount tCount = tierLicenses.get(node.getTierId());
-                tCount.updateLicenseWeight(piePiece, node);
-                tCount.iis+=piePiece;
-                bud.append("\tPHP license usage for ").append(tCount.getName()).append(" is ").append(tCount.iis).append("\n");
-            }
-            logger.log(Level.INFO,bud.toString());
-        }
-        */
+
         
         /*
          * This is where we are going identify the countable agents
@@ -176,6 +124,7 @@ public class ApplicationLicenseCount extends LicenseCount{
                 aRange.totalCount+=tRange.getTotalCount();
                 
             }
+            
             appLicenseRange.add(aRange);
         }
         

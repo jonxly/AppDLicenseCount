@@ -16,6 +16,8 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.HelpFormatter;
 
+import java.util.ArrayList;
+
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -63,7 +65,11 @@ public class LicenseOptions {
                                 .withDescription( LicenseS.PASSWD_D )
                                 .create( LicenseS.PASSWD_S );
         options.addOption(passwd);
+        
         options.addOption(LicenseS.SSL_S, LicenseS.SSL_L, LicenseS.SSL_A, LicenseS.SSL_D);
+        
+        options.addOption(LicenseS.NOW_S, LicenseS.NOW_L, LicenseS.NOW_A, LicenseS.NOW_D);
+        
         
         Option debug = OptionBuilder.withLongOpt(LicenseS.DEBUG_L).withArgName( LicenseS.DEBUG_S )
                                 .hasArg()
@@ -91,6 +97,12 @@ public class LicenseOptions {
                                 .withDescription( LicenseS.UPTIME_D )
                                 .create( LicenseS.UPTIME_S );
         options.addOption(uptime);
+        
+        Option apps = OptionBuilder.withLongOpt(LicenseS.APPS_L).withArgName( LicenseS.APPS_S )
+                                .hasArg()
+                                .withDescription( LicenseS.APPS_D )
+                                .create( LicenseS.APPS_S );
+        options.addOption(apps);
         
     }
     
@@ -126,6 +138,12 @@ public class LicenseOptions {
             if(cmdLine.hasOption(LicenseS.SSL_L) || cmdLine.hasOption(LicenseS.SSL_S)){
                 LicenseS.SSL_V=true;
             }
+            
+            if(cmdLine.hasOption(LicenseS.NOW_L) || cmdLine.hasOption(LicenseS.NOW_S)){
+                LicenseS.NOW_V=true;
+            }
+            
+            
             if(cmdLine.hasOption(LicenseS.INTERVAL_L) || cmdLine.hasOption(LicenseS.INTERVAL_S)){
                 LicenseS.INTERVAL_V=getValidNumber(cmdLine.getOptionValue(LicenseS.INTERVAL_S));
                 
@@ -147,6 +165,10 @@ public class LicenseOptions {
             }
             if(cmdLine.hasOption(LicenseS.UPTIME_L) || cmdLine.hasOption(LicenseS.UPTIME_S)){
                 LicenseS.UPTIME_V=getDoubleValidNumber(cmdLine.getOptionValue(LicenseS.UPTIME_S));
+                
+            }
+            if(cmdLine.hasOption(LicenseS.APPS_L) || cmdLine.hasOption(LicenseS.APPS_S)){
+                LicenseS.APPS_V=getApps(cmdLine.getOptionValue(LicenseS.APPS_S));
                 
             }
 
@@ -186,7 +208,8 @@ public class LicenseOptions {
             Integer val = new Integer(stringInt);
             return val.intValue();
         }catch(Exception e){
-            
+            logger.log(Level.SEVERE, new StringBuilder().append("Exception occurred while parsing number from ")
+                    .append(stringInt).append(" ").append(e.getMessage()).toString());
         }
         return -1;
     }
@@ -198,13 +221,14 @@ public class LicenseOptions {
             if(val >= 1) return val/100;
             return val;
         }catch(Exception e){
-            // 
+            logger.log(Level.SEVERE, new StringBuilder().append("Exception occurred while parsing number from ")
+                    .append(stringDouble).append(" ").append(e.getMessage()).toString()); 
         }
         return -1.0;
     }
     
     public boolean validInterval(int interval){
-        if(interval > 0 && interval < 31) return true;
+        if(interval > 0 && interval < 36) return true;
         return false;
     }
     
@@ -213,5 +237,12 @@ public class LicenseOptions {
         return false;
     }
     
+    public ArrayList<String> getApps(String apps){
+        if(apps != null){
+            String[] appsArr = apps.split(",");
+            for(int i=0; i < appsArr.length; i++) LicenseS.APPS_V.add(appsArr[i].trim());
+        }
+        return LicenseS.APPS_V;
+    }
     
 }

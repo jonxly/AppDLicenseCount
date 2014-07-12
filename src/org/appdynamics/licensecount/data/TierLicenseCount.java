@@ -9,6 +9,8 @@ import org.appdynamics.appdrestapi.data.*;
 import org.appdynamics.appdrestapi.util.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import org.appdynamics.appdrestapi.resources.s;
 
 import java.util.logging.Logger;
@@ -108,7 +110,8 @@ public class TierLicenseCount extends LicenseCount{
         }
     }
     
-    public void populateNodeLicenseRange(TimeRange totalTimeRange, ArrayList<TimeRange> timeRanges, RESTAccess access, String applicationName){
+    public void populateNodeLicenseRange(TimeRange totalTimeRange, ArrayList<TimeRange> timeRanges, 
+            RESTAccess access, String applicationName){
         
         if(s.debugLevel >= 2) 
             logger.log(Level.INFO,new StringBuilder().append("Populating tier ").append(name).append(" licnese count for application ").append(applicationName).toString());
@@ -126,6 +129,7 @@ public class TierLicenseCount extends LicenseCount{
         MetricDatas tierAppAgents=access.getRESTMetricQuery(0, applicationName, name, totalTimeRange.getStart(), totalTimeRange.getEnd());
         MetricDatas tierMachineAgents=access.getRESTMetricQuery(1, applicationName, name, totalTimeRange.getStart(), totalTimeRange.getEnd());
         
+        //This call doesn't do anything --delete
         getMetricValues(tierAppAgents).getMetricValue();
         
         ArrayList<TimeRange> hourlyTimeRanges=TimeRangeHelper.getHourlyTimeRanges(totalTimeRange.getStart(), totalTimeRange.getEnd());
@@ -158,11 +162,47 @@ public class TierLicenseCount extends LicenseCount{
             nodeL.countNodeLicenseRange(s.percentageThreshold);  
         }
         
+        HashMap<String,ArrayList<Node>> dotNetMap=new HashMap<String,ArrayList<Node>>();
+
+        
+        //logger.log(Level.INFO,"Starting to get the types of agents for DotNet and PHP");
+ 
+        for(NodeLicenseCount nCount: getNodeLicenseCount()){
+            if(nCount.getType() == 1 ){
+                if(nCount.getType() == 1){
+                    if(!dotNetMap.containsKey(nCount.getNode().getMachineName())) dotNetMap.put(nCount.getNode().getMachineName(), new ArrayList<Node>());
+                    //logger.log(Level.INFO, new StringBuilder().append("Add DotNet Node ").append(nCount.getNode().getName()).append(" - ").append(nCount.getNode().getMachineName()).toString());
+                    dotNetMap.get(nCount.getNode().getMachineName()).add(nCount.getNode());
+                }
+
+            }
+        }
+        
+        
+        //logger.log(Level.INFO,"Start to get the license weights for the nodes");
+        // This is now going to get the counts for the .Net and php agents.
+        for(String key: dotNetMap.keySet()){
+            double size = dotNetMap.get(key).size();
+            double piePiece=1/size;
+            StringBuilder bud=new StringBuilder().append("DotNet license for ").append(key).append(" is used by ").append(size).append(" nodes, and has a weight of ").append(piePiece).append(" per node\n");
+            for(Node node: dotNetMap.get(key)){
+                //For every node in the array, we are going to add this to the count.
+                updateLicenseWeight(piePiece, node);
+                iis+=piePiece;
+                bud.append("\tDotNet license usage for tier ").append(getName()).append(" is ").append(iis).append("\n");
+            }
+            logger.log(Level.INFO,bud.toString());
+        }
+        
+        
+        
         for(int i=0; i < timeRanges.size(); i++){
             TierLicenseRange tRange = new TierLicenseRange();
             tRange.setStart(timeRanges.get(i).getStart());
             tRange.setEnd(timeRanges.get(i).getEnd());
             tRange.setName(tRange.createName());
+            HashMap<String,ArrayList<Node>> dotNetMapTemp=new HashMap<String,ArrayList<Node>>(dotNetMap);
+            
             for(NodeLicenseCount node:nodeLicenseCount){
                 if(node.getRangeValues().get(i).isCountAsLicense()){
 //                    if(s.debugLevel >= 2) 
@@ -173,8 +213,13 @@ public class TierLicenseCount extends LicenseCount{
                             //logger.log(Level.INFO,"Adding DotNet " + node.getLicWeight());
                             //StringBuilder bud = new StringBuilder();
                             //bud.append("Adding .Net to ").append(node.getNode().getTierName()).append(" orig value ").append(tRange.iisCount);
-                            tRange.iisCount+=node.getLicWeight();
-                            tRange.totalCount+=node.getLicWeight();
+                            if(dotNetMapTemp.containsKey(node.getMachineName())){
+                                tRange.iisCount+=1;
+                                tRange.totalCount+=1;
+                                dotNetMapTemp.remove(node.getMachineName());
+                            }
+                            //tRange.iisCount+=node.getLicWeight();
+                            //tRange.totalCount+=node.getLicWeight();
                             break;
                         case 2:
                             //We don't do anything for now, this will be added up later

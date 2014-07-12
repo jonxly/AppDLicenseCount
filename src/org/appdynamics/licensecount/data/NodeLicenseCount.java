@@ -117,11 +117,15 @@ public class NodeLicenseCount extends LicenseCount{
         this.totalRangeValue = totalRangeValue;
     }
     
-    public void populateNodeLicenseRange(TimeRange totalTimeRange, ArrayList<TimeRange> timeRanges, RESTAccess access, String applicationName, String tierAgentType){
+    public void populateNodeLicenseRange(TimeRange totalTimeRange, ArrayList<TimeRange> timeRanges, RESTAccess access, 
+            String applicationName, String tierAgentType){
         MetricDatas mDatas= 
-                access.getRESTMetricQuery(getQueryType(), applicationName, node.getTierName(), node.getName(), totalTimeRange.getStart(), totalTimeRange.getEnd());
+                access.getRESTMetricQuery(getQueryType(), applicationName, node.getTierName(), node.getName(), 
+                totalTimeRange.getStart(), totalTimeRange.getEnd());
+        //What happens whe this is null ?
         totalRangeValue=new NodeLicenseRange("Total Node Count");
-        totalRangeValue.setStart(totalTimeRange.getStart());totalRangeValue.setEnd(totalTimeRange.getEnd());
+        totalRangeValue.setStart(totalTimeRange.getStart());
+        totalRangeValue.setEnd(totalTimeRange.getEnd());
         totalRangeValue.setMetricValues(getMetricValues(mDatas));
         
         int count=0;

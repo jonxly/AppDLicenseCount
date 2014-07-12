@@ -133,12 +133,22 @@ public class LicenseCount {
     public ArrayList<TimeRange> getTimeRanges(int interval){
         Calendar cal1=Calendar.getInstance();
         // First we are going to zero out the time 0000
-        cal1.set(Calendar.HOUR_OF_DAY, 0);cal1.set(Calendar.SECOND,0);cal1.set(Calendar.MINUTE, 0);
+        cal1.set(Calendar.HOUR_OF_DAY, 0);cal1.set(Calendar.SECOND,0);cal1.set(Calendar.MINUTE, 0);cal1.set(Calendar.MILLISECOND,0);
         Calendar cal2=Calendar.getInstance();cal2.setTimeInMillis(cal1.getTimeInMillis());
         cal2.add(Calendar.HOUR, -24);
         
         ArrayList<TimeRange> value = new ArrayList<TimeRange>();
         
+        //This should provide the current data
+        if(LicenseS.NOW_V){
+            Calendar calNow = Calendar.getInstance();
+            calNow.set(Calendar.SECOND,0);calNow.set(Calendar.MINUTE, 0);calNow.set(Calendar.MILLISECOND,0);
+            Calendar calHalf = Calendar.getInstance();calHalf.setTimeInMillis(calNow.getTimeInMillis());
+            calHalf.set(Calendar.HOUR_OF_DAY, 0);
+            
+            value.add(new TimeRange(calHalf.getTimeInMillis(),calNow.getTimeInMillis()));
+            
+        }
         value.add(new TimeRange(cal2.getTimeInMillis(),cal1.getTimeInMillis()));
         
         for(int i=1; i < interval;i++){
@@ -153,7 +163,10 @@ public class LicenseCount {
     public TimeRange getTimeRange(int interval){
         Calendar cal1=Calendar.getInstance();
         // First we are going to zero out the time 0000
-        cal1.set(Calendar.HOUR_OF_DAY, 0);cal1.set(Calendar.SECOND,0);cal1.set(Calendar.MINUTE, 0);
+        if(!LicenseS.NOW_V)
+            cal1.set(Calendar.HOUR_OF_DAY, 0);
+        
+        cal1.set(Calendar.SECOND,0);cal1.set(Calendar.MINUTE, 0);cal1.set(Calendar.MILLISECOND,0);
         Calendar cal2=Calendar.getInstance();cal2.setTimeInMillis(cal1.getTimeInMillis());
         cal2.add(Calendar.HOUR, -24);
         

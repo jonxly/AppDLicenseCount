@@ -7,6 +7,7 @@ package org.appdynamics.licensecount.file;
 import org.appdynamics.appdrestapi.resources.s;
 
 import org.appdynamics.licensecount.resources.LicenseS;
+import org.appdynamics.licensecount.data.NodeLicenseCount;
 import org.appdynamics.licensecount.data.TierHourLicenseRange;
 import org.appdynamics.licensecount.data.TierLicenseRange;
 import org.appdynamics.licensecount.data.ApplicationLicenseRange;
@@ -20,6 +21,7 @@ import org.appdynamics.licensecount.data.CustomerLicenseCount;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -49,7 +51,8 @@ public class WriteExcelDoc {
         XSSFSheet licenseSummary = workbook.createSheet(LicenseS.LICENSE_SUMMARY);
         XSSFSheet licenseTiers = workbook.createSheet(LicenseS.TIER_SUMMARY);
         XSSFSheet licenseHourlyTiers = workbook.createSheet(LicenseS.HOURLY_TIER_SUMMARY);
-        
+        XSSFSheet licenseNodeInfo = workbook.createSheet(LicenseS.NODE_INFO_SUMMARY);
+        addNodeInfo(licenseNodeInfo);
         // Lets create the first row which will be the header.
         int headerRowIndex=0;
         Row headerRow = licenseSummary.createRow(headerRowIndex);
@@ -361,7 +364,7 @@ public class WriteExcelDoc {
                     break;
                 case 1:
                     cell = rows.get(i).createCell(2);
-                    cell.setCellValue(LicenseS.TOTAL_AGENT_COUNT);
+                    cell.setCellValue(LicenseS.JAVA_AGENT_COUNT);
                     tempRowIndex++;
                     break;
                
@@ -560,5 +563,76 @@ public class WriteExcelDoc {
         }
         tempRowIndex++;
         return tempRowIndex++;
+    }
+    
+    public void addNodeInfo(XSSFSheet curSheet){
+        // Create the header
+        int row=0;
+        Row mainRow = curSheet.createRow(row);
+        row+=2;
+
+   
+        Cell cell = mainRow.createCell(0);
+        cell.setCellValue(LicenseS.APPLICATION_NAME);
+        cell = mainRow.createCell(1);
+        cell.setCellValue(LicenseS.TIER_NAME);
+        cell = mainRow.createCell(2);
+        cell.setCellValue(LicenseS.NODE_NAME);
+        cell = mainRow.createCell(3);
+        cell.setCellValue(LicenseS.AGENT_TYPE);
+        cell = mainRow.createCell(4);
+        cell.setCellValue(LicenseS.AGENT_NAME_MACHINE_AGENT);
+        cell = mainRow.createCell(5);
+        cell.setCellValue(LicenseS.DESCRIPTION);
+        
+        Iterator<Integer> appIter = customer.getApplications().keySet().iterator();
+        while(appIter.hasNext()){
+            Integer appId = appIter.next();
+            ApplicationLicenseCount appCount = customer.getApplications().get(appId);
+            Iterator<Integer> tierIter = appCount.getTierLicenses().keySet().iterator();
+            while(tierIter.hasNext()){
+                Integer tierId = tierIter.next();
+                TierLicenseCount tierCount = appCount.getTierLicenses().get(tierId);
+                for(NodeLicenseCount nodeCount: tierCount.getNodeLicenseCount()){
+                    mainRow = curSheet.createRow(row);
+                    cell = mainRow.createCell(0);
+                    cell.setCellValue(appCount.getApplicationName());
+                    cell = mainRow.createCell(1);
+                    cell.setCellValue(tierCount.getName());
+                    cell = mainRow.createCell(2);
+                    cell.setCellValue(nodeCount.getName());
+                    // This is when we pick the agent type
+                    cell = mainRow.createCell(3);
+                    if(nodeCount.getNode().isAppAgentPresent()){
+                        cell.setCellValue(nodeCount.getAgentName(nodeCount.getType()));
+                    }else{
+                        cell.setCellValue(LicenseS.NONE);
+                    }
+                    
+                    cell = mainRow.createCell(4);
+                    if(nodeCount.getNode().isMachineAgentPresent()){
+                        cell.setCellValue(LicenseS.PRESENT);
+                    }else{
+                        cell.setCellValue(LicenseS.NONE);
+                    }
+                    
+                    cell = mainRow.createCell(5);
+                    cell.setCellValue(getDescription(nodeCount));
+                    row++;
+                }
+            }
+        }
+        
+        
+    }
+    
+    public String getDescription(NodeLicenseCount node){
+        StringBuilder bud = new StringBuilder();
+        if(node.getNode().isAppAgentPresent()){
+            bud.append(node.getNode().getAppAgentVersion());
+            if(node.getNode().isMachineAgentPresent()) bud.append(" || ");
+        }
+        if(node.getNode().isMachineAgentPresent()) bud.append(node.getNode().getMachineAgentVersion());
+        return bud.toString();
     }
 }

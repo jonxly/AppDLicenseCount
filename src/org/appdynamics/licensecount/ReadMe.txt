@@ -1,3 +1,5 @@
 We need to recheck
 
-Adding the new check for php and continuing testing.
+
+No more fractional counts.
+Add the current time.

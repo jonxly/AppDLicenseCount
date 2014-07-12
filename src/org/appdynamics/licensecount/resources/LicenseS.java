@@ -6,6 +6,8 @@ package org.appdynamics.licensecount.resources;
 
 import org.appdynamics.licensecount.resources.OPTS;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author gilbert.solorzano
@@ -20,7 +22,7 @@ public class LicenseS extends OPTS{
     public static final boolean VERSION_R=false;
     public static final boolean VERSION_A=false;
     public static final String VERSION_D="Prints out the version of the tool";
-    public static final String VERSION_V="1.0.3";
+    public static final String VERSION_V="1.0.4";
     
     public static final String FILENAME_L="file";
     public static final String FILENAME_S="f";
@@ -47,8 +49,21 @@ public class LicenseS extends OPTS{
     public static final boolean UPTIME_R=false;
     public static final boolean UPTIME_A=true;
     
-    
+    //This will be added to limit the number of apps reported.
+    public static final String APPS_L="apps";
+    public static final String APPS_S="A";
+    public static final String APPS_D="Optional : The applications that you want to report on, comma delimited list.";
+    public static final boolean APPS_R=false;
+    public static final boolean APPS_A=true;
+    public static ArrayList<String> APPS_V=new ArrayList<String>();
     //
+    public static final String NOW_L="now";
+    public static final String NOW_S="n";
+    public static final String NOW_D="Include current agent count";
+    public static final boolean NOW_R=false;
+    public static final boolean NOW_A=false;
+    public static boolean NOW_V=false;
+    
     
     public static final String USAGE="java -jar AppDynamicsLC.jar";
     public static final String FILE_ENDING="_LicenseCount.xlsx";
@@ -63,9 +78,14 @@ public class LicenseS extends OPTS{
     public static final String LICENSE_SUMMARY="License Summary";
     public static final String TIER_SUMMARY="Tier Summary";
     public static final String HOURLY_TIER_SUMMARY="Hourly Tier Summary";
+    public static final String NODE_INFO_SUMMARY="Node Info Summary";
+    
     public static final String CUSTOMER_NAME="Cutomer Name";
     public static final String APPLICATION_NAME="Application Name";
     public static final String TIER_NAME="Tier Name";
+    public static final String NODE_NAME="Node Name";
+    public static final String AGENT_TYPE="Agent Type";
+  
     
     public static final String TOTAL_AGENT_COUNT="Total Agent Count";
     public static final String JAVA_AGENT_COUNT="Java Agent Count";
@@ -84,6 +104,9 @@ public class LicenseS extends OPTS{
     public static final String AGENT_NAME_NODEJS="NodeJS Agent";
     public static final String AGENT_NAME_DOTNET="DotNet Agent";
     public static final String AGENT_NAME_MACHINE_AGENT="Machine Agent";
+    public static final String NONE="None";
+    public static final String PRESENT="Present";
+    public static final String DESCRIPTION="Description";
     
     public static final String AGENT_TYPE_OTHER="Other";
     public static final String AGENT_NAME_OTHER_AGENT="Other";
