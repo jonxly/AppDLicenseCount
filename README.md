@@ -45,7 +45,7 @@ java -cp "execLib/*" org.appdynamics.licensecount.CountLicenses -c <FQDN-For-Con
 
  -s,--ssl            :   Use SSL with connection
 
- -P,--port <P>       :   The is going to be the port that is used by the controller.
+ -P,--port <\P>       :   The is going to be the port that is used by the controller.
 
  -u,--username <u>   :   The user name to use for the connection
 
