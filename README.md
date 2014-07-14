@@ -37,6 +37,7 @@ This will create a directory called execLib with all of the necessary libraries 
 
 Usage
 --------
+'''
 java -cp "execLib/*" org.appdynamics.licensecount.CountLicenses -c <FQDN-For-Controller> -P <PORT> -u<USER-NAME> -p <PASSWORD> -a <ACCOUNT-NAME> [-s] [-n] [-i] [-A <Apps>] [-d 1|2]
 
  -a,--account <a>    :   If controller is multi-tenant add the account
@@ -45,7 +46,7 @@ java -cp "execLib/*" org.appdynamics.licensecount.CountLicenses -c <FQDN-For-Con
 
  -s,--ssl            :   Use SSL with connection
 
- -P,--port <\P>       :   The is going to be the port that is used by the controller.
+ -P,--port <P>       :   The is going to be the port that is used by the controller.
 
  -u,--username <u>   :   The user name to use for the connection
 
@@ -62,9 +63,10 @@ java -cp "execLib/*" org.appdynamics.licensecount.CountLicenses -c <FQDN-For-Con
  -U,--uptime <U>     :   Optional : The amount of uptime necessary for an agent to be up so that it is counted. Default value is .70 (70%) 
 
  -d,--debug <d>      :   Debug level to set the calls at.
-
+'''
 
 Example:
+
 java -Xmx512m -cp "execLib/*" org.appdynamics.licensecount.CountLicenses -cACME-CONTROLLER.saas.appdynamics.com -P443 -uACMEUSERNAME -pACMEPASSWORD -aACME -s 
 
 Support:
