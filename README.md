@@ -37,7 +37,7 @@ This will create a directory called execLib with all of the necessary libraries 
 
 Usage
 --------
-'''
+```
 java -cp "execLib/*" org.appdynamics.licensecount.CountLicenses -c <FQDN-For-Controller> -P <PORT> -u<USER-NAME> -p <PASSWORD> -a <ACCOUNT-NAME> [-s] [-n] [-i] [-A <Apps>] [-d 1|2]
 
  -a,--account <a>    :   If controller is multi-tenant add the account
@@ -63,7 +63,7 @@ java -cp "execLib/*" org.appdynamics.licensecount.CountLicenses -c <FQDN-For-Con
  -U,--uptime <U>     :   Optional : The amount of uptime necessary for an agent to be up so that it is counted. Default value is .70 (70%) 
 
  -d,--debug <d>      :   Debug level to set the calls at.
-'''
+```
 
 Example:
 
