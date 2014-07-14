@@ -22,8 +22,10 @@ been edited because the settings only apply to your environment.
 
 The file contains two variables please insure that they are correct (insure that no 
 extra spaces are present):
+
 appd_rest_base=../AppDRESTAPI-SDK
-appd_rest_jar=RESTAPI_1.0.7.jar
+
+appd_rest_jar=RESTAPI_1.0.9.jar
 
 Building:
 -----------
@@ -35,32 +37,38 @@ This will create a directory called execLib with all of the necessary libraries 
 
 Usage
 --------
-java -cp "execLib/*" org.appdynamics.licensecount.CountLicenses -c <FQDN-For-Controller> -P <PORT> -u<USER-NAME> -p <PASSWORD> -a <ACCOUNT-NAME> [-s] [-d 1|2]
+java -cp "execLib/*" org.appdynamics.licensecount.CountLicenses -c <FQDN-For-Controller> -P <PORT> -u<USER-NAME> -p <PASSWORD> -a <ACCOUNT-NAME> [-s] [-n] [-i] [-A <Apps>] [-d 1|2]
 
- -a,--account <a>   :   If controller is multi-tenant add the account
+ -a,--account <a>    :   If controller is multi-tenant add the account
 
- -c,--controller <c>:   This is going to be the FQDN of the controller, for example: appdyn.saas.appdynamics.com
+ -c,--controller <c> :   This is going to be the FQDN of the controller, for example: appdyn.saas.appdynamics.com
 
- -d,--debug <d>     :   Debug level to set the calls at.
+ -s,--ssl            :   Use SSL with connection
 
- -f,--file <f>      :   Optional : This is going to be the file name that is going to be created. Default is <AccountName>_LicenseCount.xlsx.
+ -P,--port <P>       :   The is going to be the port that is used by the controller.
 
- -g,--granular      :   How granular you want the text.
+ -u,--username <u>   :   The user name to use for the connection
 
- -i,--interval <i>  :   Optional : This is going to be the number of days we go back and run. Default is going back 7 days from midnight to midnight.
+ -p,--passwd <p>     :   The password to use for the connection
 
- -P,--port <P>      :   The is going to be the port that is used by the controller.
+ -f,--file <f>       :   Optional : This is going to be the file name that is going to be created. Default is <AccountName>_LicenseCount.xlsx.
 
- -p,--passwd <p>    :   The password to use for the connection
+ -i,--interval <i>   :   Optional : This is going to be the number of days we go back and run. Default is going back 7 days from midnight to midnight.
 
- -s,--ssl           :   Use SSL with connection
+ -A,--apps           :   Optional : Comma separated list of Application names with no extra spaces that should be included in the report.
 
- -U,--uptime <U>    :   Optional : The amount of uptime necessary for an agent to be up so that it is counted. Default value is .70 (70%) 
+ -g,--granular       :   How granular you want the text.
 
- -u,--username <u>  :   The user name to use for the connection
+ -U,--uptime <U>     :   Optional : The amount of uptime necessary for an agent to be up so that it is counted. Default value is .70 (70%) 
+
+ -d,--debug <d>      :   Debug level to set the calls at.
 
 
 Example:
 java -Xmx512m -cp "execLib/*" org.appdynamics.licensecount.CountLicenses -cACME-CONTROLLER.saas.appdynamics.com -P443 -uACMEUSERNAME -pACMEPASSWORD -aACME -s 
+
+Support:
+--------
+For support and feature requests please email gilbert.solorzano@appdynamics.com
 
 
